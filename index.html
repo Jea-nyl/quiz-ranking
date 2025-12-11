@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>IT Quiz Game Rankings</title>
+  <style>
+    body { font-family: Arial; padding:20px; background:#f0f0f0; }
+    h1 { text-align:center; }
+    .score-box {
+      background:white; padding:10px; margin:10px; border-radius:6px;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>IT QUIZ GAME — RANKINGS</h1>
+  <div id="scores"></div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "YOUR_KEY",
+      authDomain: "YOUR.firebaseapp.com",
+      databaseURL: "https://YOUR-default-rtdb.firebaseio.com",
+      projectId: "YOUR_ID",
+      storageBucket: "YOUR.appspot.com",
+      messagingSenderId: "123",
+      appId: "1:123:web:abc"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    const scoreRef = ref(db, "scores/");
+    const scoreDiv = document.getElementById("scores");
+
+    onValue(scoreRef, (snapshot) => {
+      scoreDiv.innerHTML = "";
+      const data = snapshot.val();
+      let list = Object.values(data);
+
+      list.sort((a,b)=>b - a);
+
+      list.forEach((score, index)=>{
+        scoreDiv.innerHTML += `
+          <div class="score-box">
+            Rank ${index+1}: <b>${score}</b>
+          </div>`;
+      });
+    });
+  </script>
+</body>
+</html>
